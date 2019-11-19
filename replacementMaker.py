@@ -1,23 +1,20 @@
+import os
+import sys
 
-fileKok="C:\\Users\\Glu\\Desktop\\KangleiIyek\\kok.txt"
-onlyfileKok="C:\\Users\\Glu\\Desktop\\KangleiIyek\\onlykok.txt"
-filecheitap="C:\\Users\\Glu\\Desktop\\KangleiIyek\\cheitap.txt"
-filelonsum="C:\\Users\\Glu\\Desktop\\KangleiIyek\\lonsum.txt"
-filerar="C:\\Users\\Glu\\Desktop\\KangleiIyek\\rar.txt"
-# filesample="C:\\Users\\Glu\\Desktop\\KangleiIyek\\sample.txt"
-filesample="C:\\Users\\Glu\\Downloads\\Telegram Desktop\\FinalAll.txt"
-
-filesigna="C:\\Users\\Glu\\Desktop\\KangleiIyek\\signa.txt"
-
+fileKok = os.path.normcase('./KangleiIyek/kok.txt')
+onlyfileKok=os.path.normcase('./KangleiIyek/onlykok.txt')
+filecheitap=os.path.normcase('./KangleiIyek/cheitap.txt')
+filelonsum=os.path.normcase('./KangleiIyek/lonsum.txt')
+filerar=os.path.normcase('./KangleiIyek/rar.txt')
+filesample=os.path.normcase('./KangleiIyek/FinalAllRsnd.txt')
+filesigna=os.path.normcase('./KangleiIyek/signa.txt')
 
 def read(arg:str):
     with open(arg, 'r',encoding="UTF-16") as content_file:
         return content_file.read()
 
-
-
-print()
-print(read(filecheitap))
+# print()
+# print(read(filecheitap))
 
 kok=read(fileKok).split(":")
 kokpair=[]
@@ -31,7 +28,7 @@ onlykokpair=[]
 for elem in onlykok:
     wp=elem.split("=")
     onlykokpair.append(wp.copy())
-print(onlykokpair)
+# print(onlykokpair)
 
 lonsum=read(filelonsum).split(":>")
 onlylonsum=[]
@@ -39,7 +36,7 @@ for elem in lonsum:
     wp=elem.split("=")
     onlylonsum.append(wp.copy())
     kokpair.append(wp)
-print(kokpair)
+# print(kokpair)
 
 cheitap=read(filecheitap).split(":")
 cheitappair=[]
@@ -47,7 +44,7 @@ for elem in cheitap:
     wp=elem.split(">=")
     cheitappair.append(wp)
 
-print(cheitappair)
+# print(cheitappair)
 
 rartap=read(filerar).split(":")
 rarpair=[]
@@ -55,7 +52,7 @@ for elem in rartap:
     wp=elem.split("=")
     rarpair.append(wp)
 
-print(rarpair)
+# print(rarpair)
 
 #mixure maker
 mixurepair=[]
@@ -69,14 +66,14 @@ for kokelm in kokpair:
         # apuneng = kokelm[1] + cheitapelm[1]
         mixurepair.append([apun,apuneng])
 
-print(mixurepair)
+# print(mixurepair)
 
 signa = read(filesigna).split(":")
 signapair=[]
 for signelm in signa:
     signapair.append(signelm.split("="))
 
-print(signapair)
+# print(signapair)
 
 
 ############################################################
@@ -97,14 +94,32 @@ def gettrasliterate(ele:str):
     return ele.replace("∆","")#repalcing "apun"
 #################################################################
 
-sample=read(filesample).split("\n")
+counter = 0
+data = set()
 
-counter=0
-with open("C:\\Users\\Glu\\Desktop\\KangleiIyek\\IyekListPair.txt", 'a',encoding="UTF-16") as the_file:
-    for myele in sample:
-        myele=myele.replace("\n","").replace("\r","")
-        counter=counter+1
-        if(counter%10000==0):
-            print(counter)
-            # break
-        the_file.write(myele + "-->" + gettrasliterate(myele)+"\n")
+with open(filesample, encoding='utf-8') as f:
+    for l in f.readlines():
+        data.add(l.replace('\n', ''))
+
+dc = 0
+dataset = ''
+for w in data:
+    # dataset += w + '\n'
+    
+    if ((counter + 1) % 10000) == 0:
+        with open('data/data-{}.txt'.format(dc), 'w') as f:
+            f.write(dataset)
+            dataset = ''
+            dc += 1
+    
+    s = '{} - {}'.format(gettrasliterate(w), w)
+    dataset += s + '\n'
+    sys.stdout.write("\r%d" % counter)
+    sys.stdout.flush()    
+    counter += 1
+
+# with open(filesample, 'w') as f:
+#     f.write(dataset)
+
+# with open('data.txt', 'w') as f:
+#     f.write(dataset)
